@@ -8,6 +8,7 @@ ship.x=300
 ship.y=400
 bullets=[]
 bugs=[]
+level=1
 for i in range(7):
     bug=Actor("bug")
     bug.x=70+(50*i)
@@ -29,6 +30,7 @@ def draw():
     screen.draw.text (str(score),(15,15),color=  "deep sky blue")
 def update():
     global score
+    global level
     for b in bullets:
         b.y=b.y-5
     if keyboard.w:
@@ -44,14 +46,26 @@ def update():
         bullet.x=ship.x
         bullet.y=ship.y-150
         bullets.append(bullet)
-    for b in bugs:
-        b.y+=0.5
-        for bullet in bullets:
-            if bullet.colliderect(b):
-                bullets.remove(bullet)
-                bugs.remove(b)
-                score=score+1
+    if len(bugs)>0:
+        for b in bugs:
+            b.y+=0.5
+            for bullet in bullets:
+                if bullet.colliderect(b):
+                    bullets.remove(bullet)
+                    bugs.remove(b)
+                    score=score+1
+            if ship.colliderect(b):
+                ship.dead=True
+    if len(bugs)==0:
+        level=level+1
+        for i in range(10):
+            bug=Actor("bug")
+            bug.x=100+(50*i)
+            bug.y=200
+            bugs.append(bug)
+
     
-        if ship.colliderect(b):
-            ship.dead=True
-           
+
+
+pgzrun.go()
+# make level 2 for ship  shooter
