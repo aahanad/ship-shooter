@@ -1,4 +1,3 @@
-
 import pgzrun
 WIDTH=600
 HEIGHT=600
@@ -28,9 +27,12 @@ def draw():
     for bug in bugs:
         bug.draw()
     screen.draw.text (str(score),(15,15),color=  "deep sky blue")
+def gameOver():
+    screen.draw.text("GAME OVER",(250,300))
 def update():
     global score
     global level
+    move=False
     for b in bullets:
         b.y=b.y-5
     if keyboard.w:
@@ -38,34 +40,41 @@ def update():
     if keyboard.s:
         ship.y+=10
     if keyboard.d:
-        ship.x+=10
+        if ship.x< WIDTH-100:
+            ship.x+=10
     if keyboard.a:
-        ship.x-=10
+        if ship.x> 100:
+            ship.x-=10
     if keyboard.space:
         bullet=Actor("bullet")
         bullet.x=ship.x
         bullet.y=ship.y-150
         bullets.append(bullet)
     if len(bugs)>0:
-        for b in bugs:
+        move=True
+    for b in bugs:
+        if move == True:
             b.y+=0.5
-            for bullet in bullets:
-                if bullet.colliderect(b):
-                    bullets.remove(bullet)
-                    bugs.remove(b)
-                    score=score+1
+        if b.y> HEIGHT:
+            bugs.remove(b)
+        for bullet in bullets:
+            if bullet.colliderect(b):
+                bullets.remove(bullet)
+                bugs.remove(b)
+                score=score+1
+                if len(bugs)==0:
+                    gameOver()
+                    level=level+1
+                    for i in range(10):
+                        bug=Actor("bug")
+                        bug.x=100+(50*i)
+                        bug.y=200
+                        bugs.append(bug)
             if ship.colliderect(b):
                 ship.dead=True
-    if len(bugs)==0:
-        level=level+1
-        for i in range(10):
-            bug=Actor("bug")
-            bug.x=100+(50*i)
-            bug.y=200
-            bugs.append(bug)
-
-    
-
-
 pgzrun.go()
-# make level 2 for ship  shooter
+# make for cat+fish game(fishes maybe start falling faster)
+
+
+
+
